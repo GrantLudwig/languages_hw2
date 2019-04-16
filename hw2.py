@@ -32,20 +32,6 @@ def properDate(date):
         raise ImproperDate
     elif day < 1 or day > maxMonthDay(month, year):
         raise ImproperDate
-    ##elif month < 1 or month > 12:
-    ##    raise ImproperDate
-    ##elif day < 1 or day > 31:
-    ##    raise ImproperDate
-    ##elif day > 30:
-    ##    if month == 4 or month == 6 or month == 9 or month == 11:
-    ##        raise ImproperDate
-    ##elif month == 2:
-    ##    if isLeapYear(year):
-    ##        if day > 29:
-    ##            raise ImproperDate
-    ##    else:
-    ##        if day > 28:
-    ##            raise ImproperDate
 
 
 def createDateList(fileName):
@@ -77,8 +63,8 @@ def genFinalDates(year):
     return list
 
 #returns number of days since 1/1/1800
-def daysSince(dateList):
-    curMonth, curDay, curYear = dateList
+def daysSince(date):
+    curMonth, curDay, curYear = date
     numDays = 0
     #Adds up days for years prior to current
     for year in range(1800, curYear):
@@ -110,4 +96,8 @@ for date in genFinalDates(firstYear):
     print(date)
 print(numDays)
 print(max(dateList, key=daysSince))
-print(sorted(dateList))
+print(sorted(dateList, key=daysSince))
+yearList = [date[2] for date in dateList]
+monthStr = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+dateStr = [monthStr[date[0] - 1] + " " + str(date[1]) + ", " + str(date[2]) for date in dateList]
+print(dateStr)
