@@ -76,13 +76,38 @@ def genFinalDates(year):
         list.append(date)
     return list
 
+#returns number of days since 1/1/1800
+def daysSince(dateList):
+    curMonth, curDay, curYear = dateList
+    numDays = 0
+    #Adds up days for years prior to current
+    for year in range(1800, curYear):
+        if isLeapYear(year):
+            numDays += 366
+        else:
+            numDays += 365
+    datesInYear = genFinalDates(curYear)
+    #Adds up days prior to current month
+    for month in range(1, curMonth):
+        numDays += datesInYear[month][1]
+    numDays += curDay
+    return numDays
+
 fileName = sys.argv[1]
 try:
-    list = createDateList(fileName)
-    print(list)
+    dateList = createDateList(fileName)
+    print(dateList)
 except BadFileFormat:
     print("BadFileFormat")
 except ImproperDate:
     print("ImproperDate")
-dateList = genFinalDates(2000)
-print(dateList)
+except FileNotFoundError:
+    print("FileNotFoundError")
+firstYear = dateList[0][2]
+numDays = 0
+for date in genFinalDates(firstYear):
+    numDays += date[1]
+    print(date)
+print(numDays)
+print(max(dateList, key=daysSince))
+print(sorted(dateList))
