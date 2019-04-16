@@ -5,14 +5,34 @@
 import sys
 
 class BadFileFormat(Exception): pass
+class ImproperDate(Exception): pass
 
-#TODO
 def isLeapYear(year):
-    return none
+    if year % 400 == 0:
+        return True
+    elif year % 4 == 0 and year % 4 != 0:
+        return true
+    return False
 
 #TODO
 def properDate(date):
-    return none
+    month, day, year = date
+    if year < 1800:
+        raise ImproperDate
+    elif month < 1 or month > 12:
+        raise ImproperDate
+    elif day < 1 or day > 31:
+        raise ImproperDate
+    elif day > 30:
+        if month == 4 or month == 6 or month == 9 or month == 11:
+            raise ImproperDate
+    elif month == 2:
+        if isLeapYear(year):
+            if day > 29:
+                raise ImproperDate
+        else:
+            if day > 28:
+                raise ImproperDate
 
 def createDateList(fileName):
     list = []
@@ -25,7 +45,7 @@ def createDateList(fileName):
         #int check
         try:
             date = (int(dateLine[0]), int(dateLine[1]), int(dateLine[2]))
-            #ImproperDate
+            properDate(date)
             list.append(date)
         except ValueError:
             raise BadFileFormat
@@ -39,3 +59,5 @@ try:
     print(list)
 except BadFileFormat:
     print("BadFileFormat")
+except ImproperDate:
+    print("ImproperDate")
