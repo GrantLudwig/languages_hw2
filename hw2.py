@@ -10,8 +10,8 @@ class ImproperDate(Exception): pass
 def isLeapYear(year):
     if year % 400 == 0:
         return True
-    elif year % 4 == 0 and year % 4 != 0:
-        return true
+    elif year % 4 == 0 and year % 100 != 0:
+        return True
     return False
 
 def maxMonthDay(month, year):
@@ -24,6 +24,7 @@ def maxMonthDay(month, year):
         return 30
     return 31
 
+#Throws an ImproperDate exception if date is improper
 def properDate(date):
     month, day, year = date
     if year < 1800:
@@ -33,7 +34,9 @@ def properDate(date):
     elif day < 1 or day > maxMonthDay(month, year):
         raise ImproperDate
 
-
+#returns a list in the following format:
+#   [(MM, DD, YYYY), (MM, DD, YYYY), ...)]
+#Throws a BadFileFormat if file is in an incorrect format
 def createDateList(fileName):
     list = []
     for line in open(fileName):
@@ -53,8 +56,6 @@ def createDateList(fileName):
         raise BadFileFormat
     return list
 
-
-
 def genFinalDates(year):
     list = []
     for month in range(1,13):
@@ -62,7 +63,8 @@ def genFinalDates(year):
         list.append(date)
     return list
 
-#returns number of days since 1/1/1800
+#Returns number of days since 1/1/1800
+#Helper function for max and sorted
 def daysSince(date):
     curMonth, curDay, curYear = date
     numDays = 0
@@ -82,22 +84,26 @@ def daysSince(date):
 fileName = sys.argv[1]
 try:
     dateList = createDateList(fileName)
-    print(dateList)
 except BadFileFormat:
-    print("BadFileFormat")
+    print("BadFileFormat exception, exiting program")
+    sys.exit()
 except ImproperDate:
-    print("ImproperDate")
+    print("ImproperDate exception, exiting program")
+    sys.exit()
 except FileNotFoundError:
-    print("FileNotFoundError")
+    print("FileNotFoundError exception, exiting program")
+    sys.exit()
 firstYear = dateList[0][2]
 numDays = 0
 for date in genFinalDates(firstYear):
     numDays += date[1]
     print(date)
-print(numDays)
-print(max(dateList, key=daysSince))
-print(sorted(dateList, key=daysSince))
+print("\n")
+print(numDays, "\n")
+print(max(dateList, key=daysSince), "\n")
+print(sorted(dateList, key=daysSince), "\n")
 yearList = [date[2] for date in dateList]
+print(yearList, "\n")
 monthStr = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 dateStr = [monthStr[date[0] - 1] + " " + str(date[1]) + ", " + str(date[2]) for date in dateList]
-print(dateStr)
+print(dateStr, "\n")
